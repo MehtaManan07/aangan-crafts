@@ -2,14 +2,22 @@
 import styled from "styled-components";
 import { SortMenu } from "./SortMenu";
 import { SortButtons } from "./SortButtons";
+import { useFetchProducts, useFilters } from "../../hooks";
+import { useMemo } from "react";
 const Sort = () => {
-  // const { filteredProducts } = useFilters();
+  const { filterAndSortProducts } = useFilters();
+  const { data } = useFetchProducts();
+
+  const filteredProducts = useMemo(() => {
+    if (!data) return [];
+    return filterAndSortProducts(data.data);
+  }, [data, filterAndSortProducts]);
 
   return (
     <Wrapper>
       <SortButtons />
-      {/* <p>{filteredProducts.length} products found</p> */}
-      <p>32 products found</p>
+      <p>{filteredProducts.length ?? 0} products found</p>
+      {/* <p>32 products found</p> */}
       <hr />
       <SortMenu />
     </Wrapper>

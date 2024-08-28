@@ -9,11 +9,6 @@ export const links = [
     url: "/",
   },
   {
-    id: 2,
-    text: "shipping",
-    url: "/shipping",
-  },
-  {
     id: 3,
     text: "products",
     url: "/products",

@@ -1,5 +1,5 @@
 import { useFetchProducts } from "../../hooks";
-import { FeaturedProducts, Hero } from "./components";
+import { Contact, FeaturedProducts, Hero } from "./components";
 import { HomeWrapper } from "./styles";
 
 const Home = () => {
@@ -8,6 +8,7 @@ const Home = () => {
     <HomeWrapper className="section">
       <Hero />
       <FeaturedProducts />
+      <Contact />
     </HomeWrapper>
   );
 };

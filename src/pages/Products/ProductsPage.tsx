@@ -1,21 +1,23 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect } from "react";
 import styled from "styled-components";
-import { PageHero, Sort, ProductList, Filters } from "../../components";
-import { useFilters } from "../../hooks";
+import { Filters, PageHero, ProductList, Sort } from "../../components";
+import { useFilteredProducts, useFilters } from "../../hooks";
 
 const ProductsPage = () => {
-  const { data } = useFilters();
+  const { resetIsClickFromServices, clearFilters } = useFilters();
+  const { data } = useFilteredProducts();
 
-  useEffect(() => {
-    if (data?.isClickFromServices) {
-      // if this page mounts because clicking a button in Services, should not run clearFilters()
-      // no set time out is needed to reset the variable
-      data?.resetIsClickFromServices();
-    } else {
-      // when component mounts clear the filter
-      data?.clearFilters();
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data?.isClickFromServices) {
+  //     // if this page mounts because clicking a button in Services, should not run clearFilters()
+  //     // no set time out is needed to reset the variable
+  //     resetIsClickFromServices();
+  //   } else {
+  //     // when component mounts clear the filter
+  //     clearFilters();
+  //   }
+  // }, [clearFilters, data?.isClickFromServices, resetIsClickFromServices]);
 
   return (
     <main>

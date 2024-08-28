@@ -1,17 +1,26 @@
-import { useFetchProducts, useFilters } from "../../hooks";
+import { useMemo } from "react";
+import { useFetchProducts, useFilteredProducts, useFilters } from "../../hooks";
 import { Loading } from "../shared";
 import GridView from "./GridView";
 import ListView from "./ListView";
 
 const ProductList = () => {
-  const { data } = useFilters();
-  const { isLoading } = useFetchProducts();
+  const { filterAndSortProducts } = useFilters();
+  const { data, isLoading } = useFetchProducts();
+  const { data: filterData } = useFilteredProducts();
+  
+  
+  const filteredProducts = useMemo(() => {
+    console.log('isLoading');
+    if (!data) return [];
+    return filterAndSortProducts(data.data);
+  }, [data, filterAndSortProducts]);
 
   if (isLoading) {
     return <Loading />;
   }
 
-  if ((data?.filteredProducts.length ?? 0) < 1) {
+  if ((filteredProducts.length ?? 0) < 1) {
     return (
       <h5 style={{ textTransform: "none" }}>
         Sorry, no product matches your search...
@@ -19,10 +28,10 @@ const ProductList = () => {
     );
   }
 
-  if (!data?.gridView) {
-    return <ListView filteredProducts={data?.filteredProducts ?? []} />;
+  if (!filterData?.gridView) {
+    return <ListView filteredProducts={filteredProducts} />;
   }
-  return <GridView filteredProducts={data?.filteredProducts} />;
+  return <GridView filteredProducts={filteredProducts} />;
 };
 
 export default ProductList;

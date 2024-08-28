@@ -1,9 +1,9 @@
 import { useFilters } from "../../hooks";
 
 export const ClearFilters = () => {
-  const { data } = useFilters();
+  const { clearFilters } = useFilters();
   return (
-    <button className="clear-btn" type="button" onClick={data?.clearFilters}>
+    <button className="clear-btn" type="button" onClick={clearFilters}>
       clear filters
     </button>
   );

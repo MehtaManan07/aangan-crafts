@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import QueryProvider from "./utils/QueryProvider";
+import { Toaster } from "react-hot-toast";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -12,6 +13,7 @@ root.render(
   <QueryProvider>
     <React.StrictMode>
       <App />
+      <Toaster />
     </React.StrictMode>
   </QueryProvider>
 );

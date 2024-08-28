@@ -1,16 +1,12 @@
-import { useFilters } from "../../hooks";
+import { useFilteredProducts, useFilters } from "../../hooks";
 
 export const SortMenu = () => {
-  const { data } = useFilters();
+  const { updateSort } = useFilters();
+  const { data } = useFilteredProducts();
   return (
     <form>
       <label htmlFor="sort">sort by{` `}</label>
-      <select
-        id="sort"
-        name="sort"
-        value={data?.sort}
-        onChange={(e) => data?.updateSort(e)}
-      >
+      <select id="sort" name="sort" value={data?.sort} onChange={updateSort}>
         <option value="price-lowest">price (lowest)</option>
         <option value="price-highest">price (highest)</option>
         <option value="name-a">name (a-z)</option>

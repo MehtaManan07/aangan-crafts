@@ -9,6 +9,7 @@ const fetchFeaturedProducts = async () => {
 };
 
 const fetchAllProducts = async () => {
+  console.log("fetchAllProducts");
   const data = await fetcher<FetchProductsResponse>(API_ORIGIN);
   return data;
 };

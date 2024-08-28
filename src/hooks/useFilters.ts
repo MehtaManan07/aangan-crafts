@@ -1,8 +1,9 @@
-import { useQuery, UseQueryOptions } from "react-query";
-import QueryKeyGenerator from "../utils/QueryKeyGenerator";
 import { Product } from "../api/products/types";
 import { ChangeEventHandler } from "react";
 import { useQueryClient } from "../utils/QueryProvider";
+import useFetchProducts from "./useFetchProducts";
+import QueryKeyGenerator from "../utils/QueryKeyGenerator";
+import { FilteredProductsData } from "./useFilteredProducts";
 
 type FiltersType = {
   searchTerm: string;
@@ -34,51 +35,135 @@ export type FilterState = {
   resetIsClickFromServices: () => void;
 };
 
-const voidFn = () => {};
-
-const initialState: FilterState = {
-  filteredProducts: [],
-  allProducts: [],
-  gridView: true,
-  setGridView: voidFn,
-  setListView: voidFn,
-  sort: "price-lowest",
-  updateSort: voidFn,
-  filters: defaultFilters,
-  updateFilters: voidFn,
-  clearFilters: voidFn,
-  isClickFromServices: false,
-  handleClickFromServices: voidFn,
-  resetIsClickFromServices: voidFn,
-};
-
-interface Options<TData>
-  extends Omit<
-    UseQueryOptions<FilterState, unknown, TData, string[]>,
-    "queryKey" | "queryFn" | "select"
-  > {
-  select?: (data: FilterState) => TData;
-}
-
-const useFilters = <T = FilterState>({ ...options }: Options<T> = {}) => {
+const useFilters = () => {
+  const { data: products } = useFetchProducts();
   const queryClient = useQueryClient();
-  const fetchAvailableItemsQuery = useQuery({
-    queryKey: QueryKeyGenerator.RawMaterials(),
-    queryFn: async ({ queryKey }) => {
-      const oldData = queryClient.getQueryData<FilterState>(queryKey);
-      if (oldData) {
-        return oldData;
-      }
-      return initialState;
-    },
-    refetchOnReconnect: true,
-    refetchOnWindowFocus: true,
-    retry: 3,
-    staleTime: Infinity,
-    ...options,
-  });
 
-  return fetchAvailableItemsQuery;
+  const updateSort = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const data = queryClient.getQueryData<FilteredProductsData>(
+      QueryKeyGenerator.FilteredData()
+    );
+    if (!data) return;
+    queryClient.setQueryData(QueryKeyGenerator.FilteredData(), {
+      ...data,
+      sort: e.target.value,
+    });
+  };
+
+  const updateFilters: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const { name, value } = e.target;
+    const data = queryClient.getQueryData<FilteredProductsData>(
+      QueryKeyGenerator.FilteredData()
+    );
+    if (!data) return;
+    queryClient.setQueryData(QueryKeyGenerator.FilteredData(), {
+      ...data,
+      filters: { ...data.filters, [name]: value },
+    });
+  };
+
+  const clearFilters = () => {
+    const data = queryClient.getQueryData<FilteredProductsData>(
+      QueryKeyGenerator.FilteredData()
+    );
+    if (!data) return;
+    queryClient.setQueryData(QueryKeyGenerator.FilteredData(), {
+      ...data,
+      filters: defaultFilters,
+    });
+  };
+
+  const handleClickFromServices = () => {
+    const data = queryClient.getQueryData<FilteredProductsData>(
+      QueryKeyGenerator.FilteredData()
+    );
+    if (!data) return;
+    queryClient.setQueryData(QueryKeyGenerator.FilteredData(), {
+      ...data,
+      isClickFromServices: true,
+    });
+  };
+
+  const resetIsClickFromServices = () => {
+    const data = queryClient.getQueryData<FilteredProductsData>(
+      QueryKeyGenerator.FilteredData()
+    );
+    if (!data) return;
+    queryClient.setQueryData(QueryKeyGenerator.FilteredData(), {
+      ...data,
+      isClickFromServices: false,
+    });
+  };
+
+  const filterAndSortProducts = (products: Product[]) => {
+    let filtered = products;
+    const data = queryClient.getQueryData<FilteredProductsData>(
+      QueryKeyGenerator.FilteredData()
+    );
+    if (!data) return filtered;
+    const filters = data.filters;
+    const sort = data.sort;
+
+    // Apply filters
+    if (filters.searchTerm) {
+      filtered = filtered.filter((product) =>
+        product.name.toLowerCase().includes(filters.searchTerm.toLowerCase())
+      );
+    }
+    if (filters.minPrice) {
+      filtered = filtered.filter(
+        (product) => product.price >= filters.minPrice
+      );
+    }
+    if (filters.maxPrice) {
+      filtered = filtered.filter(
+        (product) => product.price <= filters.maxPrice
+      );
+    }
+
+    // Apply sorting
+    switch (sort) {
+      case "price-lowest":
+        filtered = filtered.sort((a, b) => a.price - b.price);
+        break;
+      case "price-highest":
+        filtered = filtered.sort((a, b) => b.price - a.price);
+        break;
+      case "name-a":
+        filtered = filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "name-z":
+        filtered = filtered.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      default:
+        break;
+    }
+
+    return filtered;
+  };
+
+  const setGridView = (gridView: boolean) => {
+    const data = queryClient.getQueryData<FilteredProductsData>(
+      QueryKeyGenerator.FilteredData()
+    );
+    if (!data) return;
+    queryClient.setQueryData(QueryKeyGenerator.FilteredData(), {
+      ...data,
+      gridView,
+    });
+  };
+
+  return {
+    allProducts: products?.data ?? [],
+    setGridView: () => setGridView(true),
+    setListView: () => setGridView(false),
+    updateSort,
+    updateFilters,
+    clearFilters,
+    handleClickFromServices,
+    resetIsClickFromServices,
+    filterAndSortProducts,
+  };
 };
 
 export default useFilters;

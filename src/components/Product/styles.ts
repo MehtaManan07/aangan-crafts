@@ -5,14 +5,31 @@ export const ProductWrapper = styled.article`
     position: relative;
     background: var(--clr-black);
     border-radius: var(--radius);
+    overflow: hidden;
   }
-  img {
+
+  .background-blur {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(10px);
+    opacity: 0.6;
+    z-index: 0;
+  }
+
+  .main-image {
+    position: relative;
+    z-index: 1;
     width: 100%;
     display: block;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: var(--radius);
     transition: var(--transition);
   }
+
   .link {
     position: absolute;
     top: 50%;
@@ -28,17 +45,21 @@ export const ProductWrapper = styled.article`
     transition: var(--transition);
     opacity: 0;
     cursor: pointer;
+    z-index: 2;
     svg {
       font-size: 1.25rem;
       color: var(--clr-white);
     }
   }
-  .container:hover img {
+
+  .container:hover .main-image {
     opacity: 0.5;
   }
+
   .container:hover .link {
     opacity: 1;
   }
+
   footer {
     margin-top: 1rem;
     display: flex;

@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { SearchFilters } from "./SearchFilters";
-import { PriceFilters } from "./PriceFilters";
 import { ClearFilters } from "./ClearFilters";
 import { FiltersButton } from "./FiltersButton";
 import { useState } from "react";
@@ -19,7 +18,6 @@ const Filters = () => {
       <div className={showFilters ? "show-filters content" : "content"}>
         <form onSubmit={(e) => e.preventDefault()}>
           <SearchFilters />
-          <PriceFilters />
         </form>
         <ClearFilters />
       </div>

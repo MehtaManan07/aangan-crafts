@@ -1,6 +1,6 @@
 const API_ORIGIN: string =
-  // 'https://085c-49-207-207-58.ngrok-free.app';
-  "https://fvjh18yaye.execute-api.us-east-1.amazonaws.com/dev";
+  'https://70ec-49-207-233-154.ngrok-free.app';
+  // "https://fvjh18yaye.execute-api.us-east-1.amazonaws.com/dev";
 
 const fetcher = async <TResponse>(
   path: RequestInfo,

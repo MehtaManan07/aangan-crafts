@@ -2,8 +2,8 @@ import React from "react";
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { formatPrice } from "../../utils/helpers";
-import { ProductWrapper } from "./styles";
 import { Product } from "../../api/products/types";
+import { ProductWrapper } from "./styles";
 
 const ProductComponent: React.FC<{ product: Product }> = ({ product }) => {
   const { images, name, price, slug } = product;
@@ -11,8 +11,9 @@ const ProductComponent: React.FC<{ product: Product }> = ({ product }) => {
   return (
     <ProductWrapper>
       <div className="container">
+        <img alt={name} className="background-blur" src={image} />
         <Link to={`/products/${slug}`}>
-          <img alt={name} src={image} />
+          <img alt={name} className="main-image" src={image} />
           <div className="link">
             <FaSearch />
           </div>
