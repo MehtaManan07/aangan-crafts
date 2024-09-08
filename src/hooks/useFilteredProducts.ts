@@ -25,7 +25,7 @@ const initialData: QueryData = {
   gridView: true,
   filters: defaultFilters,
   isClickFromServices: false,
-  sort: "price-lowest",
+  sort: "price-highest",
 };
 interface Options<TData>
   extends Omit<

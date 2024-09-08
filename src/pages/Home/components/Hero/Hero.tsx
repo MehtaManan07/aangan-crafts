@@ -1,4 +1,3 @@
-import hero from "../../../../assets/hero.jpg";
 import { Link } from "react-router-dom";
 import { HeroWrapper } from "./styles";
 
@@ -41,7 +40,13 @@ const ShopNowButton = () => {
 const HeroImage = () => {
   return (
     <article className="img-container">
-      <img alt="hero" className="main-img" src={hero} />
+      <img
+        alt="hero"
+        className="main-img"
+        src={
+          "https://res.cloudinary.com/ditucj2ja/image/upload/v1725822185/hero_image_mdovjp.png"
+        }
+      />
       {/* insert one more image here */}
     </article>
   );
